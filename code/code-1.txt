@@ -1,0 +1,252 @@
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import desc
+df = spark.read.format("csv").option("header", "true").load("dbfs:/FileStore/shared_uploads/rohithsheerya@gmail.com/bt.csv")
+# Function to view customer details by CustomerID
+def view_customer_details_by_id():
+    customer_id = input("Enter CustomerID: ")
+    customer = df.filter(df["CustomerID"] == customer_id).collect()
+    if customer:
+        print("Customer Details:")
+        print(customer)
+    else:
+        print("Customer not found.")
+
+# Function to view customer details by CustomerDOB
+def view_customer_details_by_dob():
+    customer_dob = input("Enter CustomerDOB (DD-MM-YYYY): ")
+    inp=int(input("Enter number of customer you want to viwe"))
+    customer = df.filter(df["CustomerDOB"] == customer_dob).collect()
+    if customer:
+        print("Customer Details:")
+        df.show(inp)
+    else:
+        print("Customer not found.")
+
+# Function to view customer details by CustGender
+def view_customer_details_by_gender():
+    cust_gender = input("Enter CustGender (M/F): ")
+    inp=int(input("Enter number of customer you want to viwe"))
+    customer = df.filter(df["CustGender"] == cust_gender).collect()
+    if customer:
+        print("Customer Details:")
+        df.show(inp)
+    else:
+        print("Customer not found.")
+
+# Function to view customer details by CustLocation
+def view_customer_details_by_location():
+    cust_location = input("Enter CustLocation: ")
+    customer = df.filter(df["CustLocation"] == cust_location).collect()
+    if customer:
+        print("Customer Details:")
+        print(customer)
+    else:
+        print("Customer not found.")
+
+# Function to view customer details by CustAccountBalance
+def view_customer_details_by_balance():
+    cust_balance = float(input("Enter CustAccountBalance: "))
+    customer = df.filter(df["CustAccountBalance"] == cust_balance).collect()
+    if customer:
+        print("Customer Details:")
+        print(customer)
+    else:
+        print("Customer not found.")
+
+# Function to view transaction details by TransactionID
+def view_transaction_details_by_id():
+    transaction_id = input("Enter TransactionID: ")
+    transaction = df.filter(df["TransactionID"] == transaction_id).collect()
+    if transaction:
+        print("Transaction Details:")
+        print(transaction)
+    else:
+        print("Transaction not found.")
+
+# Function to view transaction details by CustomerID
+def view_transaction_details_by_customer_id():
+    customer_id = input("Enter CustomerID: ")
+    transactions = df.filter(df["CustomerID"] == customer_id).collect()
+    if transactions:
+        print("Transaction Details:")
+        print(transactions)
+    else:
+        print("No transactions found for the customer.")
+
+# Function to view transaction details by TransactionDate
+def view_transaction_details_by_date():
+    transaction_date = input("Enter TransactionDate (YYYY-MM-DD): ")
+    transactions = df.filter(df["TransactionDate"] == transaction_date).collect()
+    if transactions:
+        print("Transaction Details:")
+        print(transactions)
+    else:
+        print("No transactions found on the specified date.")
+
+# Function to view transaction details by TransactionTime
+def view_transaction_details_by_time():
+    transaction_time = input("Enter TransactionTime (HH:MM:SS): ")
+    transactions = df.filter(df["TransactionTime"] == transaction_time).collect()
+    if transactions:
+        print("Transaction Details:")
+        print(transactions)
+    else:
+        print("No transactions found at the specified time.")
+
+# Function to view transaction details by TransactionAmount
+def view_transaction_details_by_amount():
+    transaction_amount = float(input("Enter TransactionAmount (INR): "))
+    transactions = df.filter(df["TransactionAmount (INR)"] == transaction_amount).collect()
+    if transactions:
+        print("Transaction Details:")
+        print(transactions)
+    else:
+        print("No transactions found with the specified amount.")
+
+# Function to view total account balance of a customer
+def view_total_account_balance():
+    customer_id = input("Enter CustomerID: ")
+    total_balance = df.filter(df["CustomerID"] == customer_id).selectExpr("sum(CustAccountBalance)").collect()[0][0]
+    if total_balance:
+        print("Total Account Balance:")
+        print(total_balance)
+    else:
+        print("Customer not found.")
+
+# Function to view total transaction amount by CustomerID
+def view_total_transaction_amount():
+    customer_id = input("Enter CustomerID: ")
+    total_amount = df.filter(df["CustomerID"] == customer_id).selectExpr("sum(`TransactionAmount (INR)`)").collect()[0][0]
+    if total_amount:
+        print("Total Transaction Amount:")
+        print(total_amount)
+    else:
+        print("Customer not found or no transactions found for the customer.")
+
+# Function to view average transaction amount by CustomerID
+def view_average_transaction_amount():
+    customer_id = input("Enter CustomerID: ")
+    avg_amount = df.filter(df["CustomerID"] == customer_id).selectExpr("avg(`TransactionAmount (INR)`)").collect()[0][0]
+    if avg_amount:
+        print("Average Transaction Amount:")
+        print(avg_amount)
+    else:
+        print("Customer not found or no transactions found for the customer.")
+
+# Function to perform a top 10 coustomer with high transaction amount
+def sort_customers_by_transaction_amount():
+    top_10_customers = df.orderBy(col("TransactionAmount (INR)").desc()).limit(10)
+    top_10_customers.show()
+
+# Function to perform a Min and MAX of transaction
+def get_maximum_transaction_amount():
+    max_transaction = df.select("TransactionAmount (INR)").agg({"TransactionAmount (INR)": "max"}).collect()[0][0]
+    print(f"Maximum Transaction Amount: {max_transaction} INR")
+
+def get_minimum_transaction_amount():
+    min_transaction = df.select("TransactionAmount (INR)").agg({"TransactionAmount (INR)": "min"}).collect()[0][0]
+    print(f"Minimum Transaction Amount: {min_transaction} INR")
+
+# Function to perform a gender and location transaction
+def filter_customers_by_gender_location():
+    filtered_customers = df.filter((col("CustGender") == "F") & (col("CustLocation") == "CHENNAI"))
+    filtered_customers.show()
+    
+# Function to perform a sort Customers by Account Balance   
+def sort_customers_by_balance():
+    sorted_customers = df.sort(desc("CustAccountBalance")).collect()
+    if sorted_customers:
+        print("Customers Sorted by Account Balance:")
+        for customer in sorted_customers:
+            print(customer)
+    else:
+        print("No customers found.")
+
+# Funtion to perform a sort Transactions by TransactionAmount
+def sort_transactions_by_amount():
+    sorted_transactions = df.sort(desc("TransactionAmount (INR)")).collect()
+    if sorted_transactions:
+        print("Transactions Sorted by Transaction Amount:")
+        for transaction in sorted_transactions:
+            print(transaction)
+    else:
+        print("No transactions found.")
+        
+# Function to perform a sort Transactions by TransactionDate
+def sort_transactions_by_date():
+    sorted_df = df.orderBy(col("TransactionDate"))
+    sorted_df.show()
+
+# Main menu loop
+while True:
+    print("""
+    Transaction Management System
+
+    1. View Customer Details by CustomerID
+    2. View Customer Details by CustomerDOB
+    3. View Customer Details by CustGender
+    4. View Customer Details by CustLocation
+    5. View Customer Details by CustAccountBalance
+    6. View Transaction Details by TransactionID
+    7. View Transaction Details by CustomerID
+    8. View Transaction Details by TransactionDate
+    9. View Transaction Details by TransactionTime
+    10. View Transaction Details by TransactionAmount
+    11. View Total Account Balance of a Customer
+    12. View Total Transaction Amount by CustomerID
+    13. View Average Transaction Amount by CustomerID
+    14. Perform top 10 coustomer with high transaction amount
+    15. Perform perform a Min and MAX of transaction
+    16. Perform a gender and location transaction
+    17. Sort Customers by Account Balance
+    18. Sort Transactions by TransactionAmount
+    19. Sort Transactions by TransactionDate
+    20. Exit
+    """)
+
+    choice = input("Enter your choice (1-20): ")
+
+    if choice == "1":
+        view_customer_details_by_id()
+    elif choice == "2":
+        view_customer_details_by_dob()
+    elif choice == "3":
+        view_customer_details_by_gender()
+    elif choice == "4":
+        view_customer_details_by_location()
+    elif choice == "5":
+        view_customer_details_by_balance()
+    elif choice == "6":
+        view_transaction_details_by_id()
+    elif choice == "7":
+        view_transaction_details_by_customer_id()
+    elif choice == "8":
+        view_transaction_details_by_date()
+    elif choice == "9":
+        view_transaction_details_by_time()
+    elif choice == "10":
+        view_transaction_details_by_amount()
+    elif choice == "11":
+        view_total_account_balance()
+    elif choice == "12":
+        view_total_transaction_amount()
+    elif choice == "13":
+        view_average_transaction_amount()
+    elif choice == "14":
+        sort_customers_by_transaction_amount()
+    elif choice == "15":
+        get_maximum_transaction_amount()
+        get_minimum_transaction_amount()
+    elif choice == "16":
+        filter_customers_by_gender_location()
+    elif choice == "17":
+        sort_customers_by_balance()
+    elif choice == "18":
+        sort_transactions_by_amount()
+    elif choice == "19":
+        sort_transactions_by_date()
+    elif choice == "20":
+        print("Thank you for using the Transaction Management System. Goodbye!")
+        break
+    else:
+        print("Invalid choice. Please try again.")
