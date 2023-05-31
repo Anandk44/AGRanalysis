@@ -12,11 +12,12 @@ and continuous delivery.
 2.Create sparkSession using spark and load and read the csv file .
 
 3.copy the code from code.txt from code folder and paste into the databricks platform.
+
 4.press shift+ enter or run in databricks platform to run the code.
 
 ## TOOLS AND TECHNOLOGIES
 
-1.SPARK 
+1.SPARK
 2.PYTHON
 3.PYSPARK 
 4.SPARK SQL 
@@ -27,9 +28,13 @@ and continuous delivery.
 
 ## ROLES AND RESPONSIBILITY
 1.WORKED WITH AZURE DEVOPS SERVICES FOR CONTINIOUS INTEGRATION AND CONTINIOUS DELIVERY.
+
 2.WROTE YML SCRIPT FOR AUTOMATING  CONTINIOUS DELIVERY.
+
 3.CREATED VIRTUAL MACHINES AND STORAGE ACCOUNT IN AZURE PLATFORM.
+
 4.WORKED WITH AZURE DATABRICKS AND ITS VARIOUS COMPUTING SERVICES.
+
 5.CREATED RESUABLE METHODS FOR GETTING INSIGHTS FROM THE DATASETS USING PYTHON.
 
 ### CONTRIBUTORS
