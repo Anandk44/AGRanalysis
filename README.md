@@ -7,9 +7,9 @@ our available data.We have used various services of azure databricks to get insi
 and continuous delivery.
 
 ## STEPS TO RUN PROJECT
-1.log in into  microsoft azure or azure databricks account.
-2.Create sparkSession using spark and load and read the csv file .
-2.copy the code from code.txt from code folder and paste into the databricks platform.
+1.log in into  microsoft azure or azure databricks account.\n
+3.Create sparkSession using spark and load and read the csv file .
+3.copy the code from code.txt from code folder and paste into the databricks platform.
 4.press shift+ enter or run in databricks platform to run the code.
 
 ## TOOLS AND TECHNOLOGIES
